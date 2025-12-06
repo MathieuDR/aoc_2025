@@ -2,9 +2,10 @@ year := "2025"
 
 init day year=year:
     @just _setup {{day}} {{year}}
+    @just _open {{day}} {{year}}
     @just _fetch {{day}} {{year}}
 
-_setup day year:
+_setup day year=year:
     #!/usr/bin/env bash
     set -euo pipefail
     
@@ -17,8 +18,10 @@ _setup day year:
         touch "$zig_file"
     fi
 
-# Fetch input data from AOC
-_fetch day year:
+_open day year=year:
+    xdg-open "https://adventofcode.com/{{year}}/day/{{day}}"
+
+_fetch day year=year:
     #!/usr/bin/env bash
     set -euo pipefail
     
