@@ -1,16 +1,49 @@
 const std = @import("std");
-const testing = std.testing;
-const math = std.math;
+const common = @import("common");
 
 pub fn main() !void {
-    std.debug.print("Hello, World!\n", .{});
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer _ = gpa.deinit();
+    const allocator = gpa.allocator();
+    var stdout_buffer: [256]u8 = undefined;
+    var stdout_writer = std.fs.File.stdout().writer(&stdout_buffer);
+    const stdout = &stdout_writer.interface;
+
+    const MyRunner = common.Runner(solvePart1, solvePart2);
+
+    // Try to load input.txt from the same directory
+    const input = MyRunner.loadInput(allocator, "data/2025/1.bin") catch |err| {
+        try stdout.print("Error loading input: {}\n", .{err});
+        return err;
+    };
+    defer allocator.free(input);
+
+    try MyRunner.run(allocator, stdout, input);
+    try stdout.flush();
 }
 
-pub fn add(a: i32, b: i32) i32 {
-    return a + b;
+fn solvePart1(allocator: std.mem.Allocator, input: []const u8) !i64 {
+    _ = allocator;
+    _ = input;
+    // Your solution here
+    return 42;
 }
 
-test "solve" {
-    const result = add(2, 3);
-    try std.testing.expect(result == 5);
+fn solvePart2(allocator: std.mem.Allocator, input: []const u8) !i64 {
+    _ = allocator;
+    _ = input;
+    // Your solution here
+    return 84;
+}
+
+test "part 1" {
+    const input = "your test input";
+    const result = try solvePart1(std.testing.allocator, input);
+    try std.testing.expectEqual(@as(i64, 42), result);
+}
+
+test "part 2" {
+    const input = "your test input";
+    const result = try solvePart2(std.testing.allocator, input);
+    try std.testing.expectEqual(@as(i64, 84), result);
 }
