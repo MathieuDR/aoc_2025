@@ -15,7 +15,10 @@ _setup day year=year:
     
     zig_file="src/{{year}}/{{day}}/main.zig"
     if [ ! -f "$zig_file" ]; then
-        touch "$zig_file"
+        sed "s/{{'{{YEAR}}'}}/{{year}}/g; s/{{'{{DAY}}'}}/{{day}}/g" main.zig.template > "$zig_file"
+        echo "Created $zig_file"
+    else
+        echo "$zig_file already exists, skipping"
     fi
 
 _open day year=year:

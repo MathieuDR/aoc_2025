@@ -11,8 +11,7 @@ pub fn main() !void {
 
     const MyRunner = common.Runner(solvePart1, solvePart2);
 
-    // Try to load input.txt from the same directory
-    const input = MyRunner.loadInput(allocator, "data/2025/1.bin") catch |err| {
+    const input = MyRunner.loadInput(allocator, "data/{{YEAR}}/{{DAY}}.bin") catch |err| {
         try stdout.print("Error loading input: {}\n\n\n", .{err});
         try stdout.flush();
         return err;
