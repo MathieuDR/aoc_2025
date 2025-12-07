@@ -20,7 +20,7 @@ pub fn build(b: *std.Build) !void {
 
     while (try it.next()) |year_entry| {
         if (year_entry.kind == .directory and year_entry.name[0] != '.') {
-            const year_path = try std.fs.path.join(allocator, &.{"src", year_entry.name});
+            const year_path = try std.fs.path.join(allocator, &.{ "src", year_entry.name });
             var day_it = (try std.fs.cwd().openDir(
                 year_path,
                 .{ .iterate = true },
@@ -28,7 +28,7 @@ pub fn build(b: *std.Build) !void {
 
             while (try day_it.next()) |entry| {
                 if (entry.kind == .directory and entry.name[0] != '.') {
-                    const name = try std.fmt.allocPrint(allocator, "{s}_{s}", .{year_entry.name, entry.name});
+                    const name = try std.fmt.allocPrint(allocator, "{s}_{s}", .{ year_entry.name, entry.name });
 
                     // Assuming each subfolder contains a `main.zig` file to be built
                     const subfolder_path = try std.fs.path.join(allocator, &.{ year_path, entry.name });
@@ -37,7 +37,7 @@ pub fn build(b: *std.Build) !void {
                     const source_file = try std.fs.path.join(allocator, &.{ subfolder_path, "main.zig" });
 
                     // If main.zig doesn't exist, skip
-                    _ = std.fs.cwd().openFile(source_file, .{}) catch continue;
+                    std.fs.cwd().access(source_file, .{}) catch continue;
 
                     const exe = b.addExecutable(.{
                         .name = name,
@@ -48,7 +48,7 @@ pub fn build(b: *std.Build) !void {
                         }),
                     });
 
-                    if(common_mod) |mod|{
+                    if (common_mod) |mod| {
                         exe.root_module.addImport("common", mod);
                     }
 
@@ -62,7 +62,7 @@ pub fn build(b: *std.Build) !void {
                     }
 
                     const run_name = try std.fmt.allocPrint(allocator, "run_{s}", .{name});
-                    const run_description = try std.fmt.allocPrint(allocator, "Run the app for day {s} of year {s}", .{entry.name, year_entry.name});
+                    const run_description = try std.fmt.allocPrint(allocator, "Run the app for day {s} of year {s}", .{ entry.name, year_entry.name });
                     const run_step = b.step(run_name, run_description);
                     run_step.dependOn(&run_cmd.step);
 
@@ -74,14 +74,14 @@ pub fn build(b: *std.Build) !void {
                         }),
                     });
 
-                    if( common_mod) |mod| {
+                    if (common_mod) |mod| {
                         exe_unit_tests.root_module.addImport("common", mod);
                     }
 
                     const run_exe_unit_tests = b.addRunArtifact(exe_unit_tests);
 
                     const test_name = try std.fmt.allocPrint(allocator, "test_{s}", .{name});
-                    const test_description = try std.fmt.allocPrint(allocator, "Run unit tests for day {s} of year {s}", .{entry.name, year_entry.name});
+                    const test_description = try std.fmt.allocPrint(allocator, "Run unit tests for day {s} of year {s}", .{ entry.name, year_entry.name });
                     const test_step = b.step(test_name, test_description);
                     test_step.dependOn(&run_exe_unit_tests.step);
 
