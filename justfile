@@ -5,6 +5,12 @@ init day year=year:
     @just _open {{day}} {{year}}
     @just _fetch {{day}} {{year}}
 
+run day year=year:
+  zig build run_{{year}}_{{day}}
+
+test day year=year:
+  zig build test_{{year}}_{{day}}
+
 _setup day year=year:
     #!/usr/bin/env bash
     set -euo pipefail

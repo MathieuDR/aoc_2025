@@ -38,9 +38,20 @@ fn solvePart2(allocator: std.mem.Allocator, input: []const u8) !i64 {
 }
 
 test "part 1" {
-    const input = "your test input";
+    const input =
+        \\L68
+        \\L30
+        \\R48
+        \\L5
+        \\R60
+        \\L55
+        \\L1
+        \\L99
+        \\R14
+        \\L82
+    ;
     const result = try solvePart1(std.testing.allocator, input);
-    try std.testing.expectEqual(@as(i64, 42), result);
+    try std.testing.expectEqual(@as(i64, 3), result);
 }
 
 test "part 2" {
